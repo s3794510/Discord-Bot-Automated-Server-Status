@@ -1,23 +1,15 @@
 import discord
 from discord.ext import commands, tasks
-import os
 import requests
 import asyncio
 import botdb
 
-#from keep_alive import keep_alive
-#keep_alive()
-
-# Replit db: Create pair
-def create_keypair(key, value):
-  replit.db[key]=value
-  print(f'DB updated for {key}.')
-
 # Update DB parameters: Channel ID
-create_keypair('channel_id', 593560627985907730)
-create_keypair('msg_id', '')
+botdb.create_item('channel_id', 593560627985907730)
+if not botdb.exist_item('msg_id'):
+  botdb.create_item('msg_id', '')
 
-channel_id = replit.db['channel_id']
+channel_id = botdb.read_item('channel_id')
 command_prefixes = ["@", "%", "hey dogo ", "Hey dogo", "Hey Dogo", "hey Dogo"]
 
 intents = discord.Intents.all()
@@ -33,6 +25,7 @@ bot = commands.Bot(command_prefix=command_prefixes, intents = intents)
 async def on_ready():
   print(f'Logged in as {bot.user.name} ({bot.user.id})')
   print('Bot is ready to receive commands')
+  await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name=botdb.read_item('activitystatus')))
   fetch_data.start()
   
 
@@ -70,17 +63,17 @@ async def fetch_data():
     status_msg = generate_status_msg(instance_id, ip_address)
 
     # Send new message and update database if first message has not been sent
-    if (replit.db['msg_id'] == ''):
+    if (botdb.read_item('msg_id') == ''):
       sent_msg = await channel.send(status_msg)
-      replit.db['msg_id'] = sent_msg.id
+      botdb.create_item('msg_id', sent_msg.id)
       print(f"New Status Message sent. Message ID: {sent_msg.id}.")
       
-    if instance['Instance ID'] not in replit.db: 
-      create_keypair(instance_id, instance)
+    if not botdb.exist_item(instance['Instance ID']): 
+      botdb.create_item(instance_id, instance)
     else:
-      if new_status != replit.db[instance_id]['Instance Status']:
-        await edit_message(replit.db['msg_id'], status_msg)
-        create_keypair(instance_id, instance)
+      if new_status != botdb.read_item(instance_id)['Instance Status']:
+        await edit_message(botdb.read_item('msg_id'), status_msg)
+        botdb.create_item(instance_id, instance)
         print(f"Status of instance {instance_id} is changed and has been updated.")
     
     
