@@ -10,11 +10,14 @@ def create_item(key, value):
     response = table.put_item(Item=data)
     return response
 
-def read_item(key):
+def read_item(item):
+    key = {
+        'item': item
+    }
     table = dynamodb.Table(table_name)
     response = table.get_item(Key=key)
-    item = response.get('Item')
-    return item['value']
+    data = response.get('Item')
+    return data['value']
 
 def update_item(key, update_expression, expression_attribute_values):
     table = dynamodb.Table(table_name)
@@ -32,6 +35,8 @@ def delete_item(key):
     response = table.delete_item(Key=key)
     return response
 
+def exist(item, value):
+    return read_item(item) == value
 
 def exist_item(item):
     table = dynamodb.Table(table_name)
