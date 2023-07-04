@@ -9,6 +9,7 @@ botdb.create_item('channel_id', 593560627985907730)
 if not botdb.exist_item('msg_id'):
   botdb.create_item('msg_id', '')
 
+channel_id = botdb.read_item('channel_id')
 command_prefixes = ["@", "%", "hey dogo ", "Hey dogo", "Hey Dogo", "hey Dogo"]
 
 intents = discord.Intents.all()
@@ -61,6 +62,7 @@ async def fetch_data():
     status_msg = generate_status_msg(instance_id, ip_address)
 
     # Send new message and update database if first message has not been sent
+    if (botdb.read_item('msg_id') == ''):
       sent_msg = await channel.send(status_msg)
       botdb.create_item('msg_id', sent_msg.id)
       print(f"New Status Message sent. Message ID: {sent_msg.id}.")
