@@ -33,13 +33,13 @@ def delete_item(key):
     return response
 
 
-item = {
-    'item': '123',
-    'name': 'John Doe',
-    'age': 25
-}
+def exist_item(item):
+    table = dynamodb.Table(table_name)
+    response = table.get_item(Key={'item': item})
+    item = response.get('Item')
+    return item is not None
 
 def get_bottoken():
-    key_bottoken= {'item':'BOTTOKEN'}
-    return read_item(key_bottoken)
+    item_bottoken= 'BOTTOKEN'
+    return read_item(item_bottoken)
 
