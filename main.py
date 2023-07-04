@@ -25,6 +25,7 @@ bot = commands.Bot(command_prefix=command_prefixes, intents = intents)
 async def on_ready():
   print(f'Logged in as {bot.user.name} ({bot.user.id})')
   print('Bot is ready to receive commands')
+  await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name=botdb.read_item('activitystatus')))
   fetch_data.start()
   
 
