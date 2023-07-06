@@ -17,15 +17,21 @@ def check_instance_exists(instance_id):
 
 def start_instance(instance_id):
     ec2 = boto3.client('ec2')
-    response = ec2.start_instances(InstanceIds=[instance_id])
-    print(f"Starting instance {instance_id}")
-    return(response)
+    if check_instance_exists(instance_id):
+        response = ec2.start_instances(InstanceIds=[instance_id])
+        print(f"Starting instance {instance_id}")
+        return(response)
+    else:
+        return None
 
 def stop_instance(instance_id):
     ec2 = boto3.client('ec2')
-    response = ec2.stop_instances(InstanceIds=[instance_id])
-    print(f"Stopping instance {instance_id}")
-    return(response)
+    if check_instance_exists(instance_id):
+        response = ec2.stop_instances(InstanceIds=[instance_id])
+        print(f"Stopping instance {instance_id}")
+        return(response)
+    else:
+        return None
 
 def get_instance_name(instance):
     for tag in instance.tags:
