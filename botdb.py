@@ -17,7 +17,10 @@ def read_item(item):
     table = dynamodb.Table(table_name)
     response = table.get_item(Key=key)
     data = response.get('Item')
-    return data['value']
+    try:
+        return data['value']
+    except TypeError:
+        return None
 
 def update_item(key, update_expression, expression_attribute_values):
     table = dynamodb.Table(table_name)
