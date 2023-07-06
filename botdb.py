@@ -30,7 +30,17 @@ def update_item(key, update_expression, expression_attribute_values):
     updated_item = response.get('Attributes')
     return updated_item
 
-def delete_item(key):
+# def get_items_with_prefix(prefix):
+#     table = dynamodb.Table(table_name)
+#     response = table.scan(
+#         FilterExpression=boto3.dynamodb.conditions.Key('item_key').begins_with(prefix)
+#     )
+#     items = response['Items']
+#     return items
+
+
+def delete_item(item):
+    key = {'item':item}
     table = dynamodb.Table(table_name)
     response = table.delete_item(Key=key)
     return response
