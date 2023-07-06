@@ -42,6 +42,11 @@ async def on_command_error(ctx, error):
     if isinstance(error, commands.CheckFailure):
       await ctx.send("Commands can only be used in the 'bot' channel.")
       return
+    if isinstance(error, commands.MissingRequiredArgument):
+      await ctx.send("Missing required argument. Please make a more complete command.")
+      return
+    
+    
 
 #############################################################
 # Bot Beheviours
@@ -56,6 +61,12 @@ async def on_ready():
 
 def run_async_function():
     asyncio.run(fetch_data())
+
+# Check if command in the specific channel with exact name
+def in_bot_channel(name):
+    async def predicate(ctx):
+        return ctx.channel.name == name
+    return commands.check(predicate)
 
 
 # Fetch data for instance status
