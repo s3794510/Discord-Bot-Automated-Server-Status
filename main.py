@@ -132,6 +132,22 @@ async def hello(ctx):
 async def say(ctx, *, message):
   await ctx.send(message)
 
+# Command: List Instance
+@bot.command(category='Instance Control')
+async def list_instances(ctx):
+    """Show a lsit of available instances"""
+    await ctx.send("Finding instances...")
+    instance_list = botinstance.list_instances()
+    response = ""
+    if (len(instance_list) ==0):
+       await ctx.send("No instances found.")
+       return
+    for instance in instance_list:
+      if (instance[1] == 'Discord Bot'):
+        continue
+      response += f"\nInstance Name: {instance[1]}\nInstance ID: {instance[0]}\n"
+    await ctx.send(response)
+
 
 ####################################################
 # Run the bot
