@@ -1,5 +1,19 @@
 import boto3
+from botocore.exceptions import ClientError
 
+def check_instance_exists(instance_id):
+    try:
+        ec2 = boto3.client('ec2')
+        response = ec2.describe_instances(InstanceIds=[instance_id])
+        reservations = response['Reservations']
+        return len(reservations) > 0
+    except ClientError as e:
+        if e.response['Error']['Code'] == 'InvalidInstanceID.NotFound':
+            return False
+        else:
+            # Handle other exceptions if needed
+            print(f"An error occurred while checking instance existence: {e.response['Error']['Message']}")
+            return False
 
 def start_instance(instance_id):
     ec2 = boto3.client('ec2')
