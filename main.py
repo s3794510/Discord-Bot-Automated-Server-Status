@@ -117,6 +117,12 @@ async def on_guild_join(guild):
 async def on_guild_remove(guild):
   print(f'Bot has been removed from the guild: {guild.name} ({guild.id})')
 
+# Event: If bot Command is not found
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandNotFound):
+        await ctx.send("Invalid command. Please try again.")
+        await ctx.invoke(bot.get_command('help'))
 
 #########################################################
 # Bot Commands
