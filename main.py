@@ -21,6 +21,14 @@ intents.webhooks = True  # Enable webhooks
 bot = commands.Bot(command_prefix=command_prefixes, intents = intents)
 
 
+#########################################################
+# Handling command errors
+@bot.event
+async def on_command_error(ctx, error):
+  # If command is invalid
+    if isinstance(error, commands.CommandNotFound):
+      await ctx.send("Invalid command. Please use the help command for a list of available commands.")
+      await ctx.send_help(ctx.command)
 
 
 #############################################################
@@ -72,7 +80,6 @@ async def fetch_data():
         print(f"Status of instance {instance_id} is changed and has been updated.")
     
     
-    
   print('SUCCESSED Fetched and sent servers statuses')
     
 # Edit mesagge
@@ -117,12 +124,8 @@ async def on_guild_join(guild):
 async def on_guild_remove(guild):
   print(f'Bot has been removed from the guild: {guild.name} ({guild.id})')
 
-# Event: If bot Command is not found
-@bot.event
-async def on_command_error(ctx, error):
-    if isinstance(error, commands.CommandNotFound):
-        await ctx.send("Invalid command. Please try again.")
-        await ctx.invoke(bot.get_command('help'))
+
+
 
 #########################################################
 # Bot Commands
