@@ -53,12 +53,13 @@ async def on_command_error(ctx, error):
 # Event: Bot is ready and connected to Discord
 @bot.event
 async def on_ready():
-  print(f'Logged in as {bot.user.name} ({bot.user.id})')
-  print('Bot is ready to receive commands')
   await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name=botdb.read_item('activitystatus')))
   fetch_data.start()
+  print(f'Logged in as {bot.user.name} ({bot.user.id})')
+  print('Bot is ready to receive commands')
   
 
+# Run async function
 def run_async_function():
     asyncio.run(fetch_data())
 
@@ -82,12 +83,13 @@ async def fetch_data():
 
   # Bot Actions
   data = response.json()
+  #instance_id_list = []
   for instance in data:
     instance_id = instance['Instance ID']
+    #instance_id_list.append(instance_id)
     new_status = instance['Instance Status']
     ip_address = instance['Public IP Address']
     status_msg = generate_status_msg(instance_id, ip_address)
-
     # Send new message and update database if first message has not been sent
     if (botdb.read_item('msg_id') == ''):
       sent_msg = await channel.send(status_msg)
@@ -174,8 +176,12 @@ async def say(ctx, *, message):
 async def start_instance(ctx, message):
     """Start the instance based on ID"""
     instance_id = message
+    start_response = botinstance.start_instance(instance_id)
+    if start_response is None:
+      await ctx.send(f"Error: Instance with ID: '{instance_id}' does not exist.")
+      return
     await ctx.send(f"Starting instance: {instance_id}")
-    await ctx.send(botinstance.start_instance(instance_id))
+    return
 
 # Commands: Stop Instance
 @bot.command(category='Instance Control')
@@ -184,8 +190,12 @@ async def start_instance(ctx, message):
 async def stop_instance(ctx, message):
     """Stop the instance based on ID"""
     instance_id = message
+    stop_response = botinstance.stop_instance(instance_id)
+    if stop_response is None:
+      await ctx.send(f"Error: Instance with ID: '{instance_id}' does not exist.")
+      return
     await ctx.send(f"Stopping instance: {instance_id}")
-    await ctx.send(botinstance.stop_instance(instance_id))
+    return
 
 # Command: List Instance
 @bot.command(category='Instance Control')
