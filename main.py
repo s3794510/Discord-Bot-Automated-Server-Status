@@ -38,7 +38,10 @@ async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
       await ctx.send("Invalid command. Please use the help command for a list of available commands.")
       await ctx.send_help(ctx.command)
-
+    # If command called in the incorrect channels
+    if isinstance(error, commands.CheckFailure):
+      await ctx.send("Commands can only be used in the 'bot' channel.")
+      return
 
 #############################################################
 # Bot Beheviours
@@ -148,6 +151,7 @@ async def hello(ctx):
 
 # Command: Say
 @bot.command(category='TEST')
+@in_bot_channel('bot')
 async def say(ctx, *, message):
   """(TEST COMMAND) Return the message after command."""
   await ctx.send(message)
