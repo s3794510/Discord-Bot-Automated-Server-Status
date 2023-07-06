@@ -3,7 +3,7 @@ from discord.ext import commands, tasks
 import requests
 import asyncio
 import botdb
-
+import botinstancecontrol as botinstance
 
 # Update DB parameters: Channel ID
 botdb.create_item('channel_id', 593560627985907730)
@@ -11,7 +11,7 @@ if not botdb.exist_item('msg_id'):
   botdb.create_item('msg_id', '')
 
 channel_id = botdb.read_item('channel_id')
-command_prefixes = ["@", "%", "hey dogo ", "Hey dogo", "Hey Dogo", "hey Dogo"]
+command_prefixes = ["!!","$$","%%","@@", "##", "hey dogo ", "Hey dogo", "Hey Dogo", "hey Dogo"]
 
 intents = discord.Intents.all()
 intents.messages = True  # Enable reading and writing messages
@@ -122,14 +122,16 @@ async def on_guild_remove(guild):
 # Bot Commands
 
 # Command: Hello
-@bot.command()
+@bot.command(category='TEST')
 async def hello(ctx):
+    """(TEST COMMAND)"""
     await ctx.send(f'Hello {ctx.author.name}!')
 
 
 # Command: Say
-@bot.command()
+@bot.command(category='TEST')
 async def say(ctx, *, message):
+  """(TEST COMMAND) Return the message after command."""
   await ctx.send(message)
 
 # Command: Start Instance
