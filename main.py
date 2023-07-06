@@ -58,7 +58,6 @@ async def on_ready():
   print(f'Logged in as {bot.user.name} ({bot.user.id})')
   print('Bot is ready to receive commands')
   
-
 # Run async function
 def run_async_function():
     asyncio.run(fetch_data())
