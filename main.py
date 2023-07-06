@@ -12,6 +12,11 @@ if not botdb.exist_item('msg_id'):
 
 channel_id = botdb.read_item('channel_id')
 command_prefixes = ["!!","$$","%%","@@", "##", "hey dogo ", "Hey dogo", "Hey Dogo", "hey Dogo"]
+server_admin_role = botdb.read_item('server-admin-role')
+
+# Necessary role to use Server Administration commands
+if (server_admin_role == None):
+  server_admin_role = 'admin'
 
 intents = discord.Intents.all()
 intents.messages = True  # Enable reading and writing messages
@@ -25,6 +30,10 @@ bot = commands.Bot(command_prefix=command_prefixes, intents = intents)
 # Handling command errors
 @bot.event
 async def on_command_error(ctx, error):
+    # If command is called by users without the right roles
+    if isinstance(error, commands.MissingRole):
+      await ctx.send(f"You don't have the required role ({server_admin_role}) to use this command.")
+      return
   # If command is invalid
     if isinstance(error, commands.CommandNotFound):
       await ctx.send("Invalid command. Please use the help command for a list of available commands.")
@@ -145,6 +154,8 @@ async def say(ctx, *, message):
 
 # Command: Start Instance
 @bot.command(category='Instance Control')
+@commands.has_role(server_admin_role)
+@in_bot_channel('bot')
 async def start_instance(ctx, message):
     """Start the instance based on ID"""
     instance_id = message
@@ -153,6 +164,8 @@ async def start_instance(ctx, message):
 
 # Commands: Stop Instance
 @bot.command(category='Instance Control')
+@commands.has_role(server_admin_role)
+@in_bot_channel('bot')
 async def stop_instance(ctx, message):
     """Stop the instance based on ID"""
     instance_id = message
@@ -161,6 +174,8 @@ async def stop_instance(ctx, message):
 
 # Command: List Instance
 @bot.command(category='Instance Control')
+@commands.has_role(server_admin_role)
+@in_bot_channel('bot')
 async def list_instances(ctx):
     """Show a lsit of available instances"""
     await ctx.send("Finding instances...")
