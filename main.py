@@ -4,6 +4,7 @@ import requests
 import asyncio
 import botdb
 
+
 # Update DB parameters: Channel ID
 botdb.create_item('channel_id', 593560627985907730)
 if not botdb.exist_item('msg_id'):
@@ -20,6 +21,10 @@ intents.webhooks = True  # Enable webhooks
 bot = commands.Bot(command_prefix=command_prefixes, intents = intents)
 
 
+
+
+#############################################################
+# Bot Beheviours
 # Event: Bot is ready and connected to Discord
 @bot.event
 async def on_ready():
@@ -32,18 +37,8 @@ async def on_ready():
 def run_async_function():
     asyncio.run(fetch_data())
 
-# Command: Hello
-@bot.command()
-async def hello(ctx):
-    await ctx.send(f'Hello {ctx.author.name}!')
 
-
-# Command: Say
-@bot.command()
-async def say(ctx, *, message):
-  await ctx.send(message)
-
-
+# Fetch data for instance status
 @tasks.loop(minutes=1)
 async def fetch_data():
   response = requests.get('https://c38ltc8s3a.execute-api.ap-southeast-1.amazonaws.com/default/GetEC2InstancesWithTag')
@@ -80,7 +75,7 @@ async def fetch_data():
     
   print('SUCCESSED Fetched and sent servers statuses')
     
-# Bot: Edit mesagge
+# Edit mesagge
 async def edit_message(message_id, new_content):
     channel = bot.get_channel(channel_id)
     message = await channel.fetch_message(message_id)
@@ -123,5 +118,21 @@ async def on_guild_remove(guild):
   print(f'Bot has been removed from the guild: {guild.name} ({guild.id})')
 
 
+#########################################################
+# Bot Commands
 
+# Command: Hello
+@bot.command()
+async def hello(ctx):
+    await ctx.send(f'Hello {ctx.author.name}!')
+
+
+# Command: Say
+@bot.command()
+async def say(ctx, *, message):
+  await ctx.send(message)
+
+
+####################################################
+# Run the bot
 bot.run(botdb.get_bottoken())
