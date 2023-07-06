@@ -132,6 +132,22 @@ async def hello(ctx):
 async def say(ctx, *, message):
   await ctx.send(message)
 
+# Command: Start Instance
+@bot.command(category='Instance Control')
+async def start_instance(ctx, message):
+    """Start the instance based on ID"""
+    instance_id = message
+    await ctx.send(f"Starting instance: {instance_id}")
+    await ctx.send(botinstance.start_instance(instance_id))
+
+# Commands: Stop Instance
+@bot.command(category='Instance Control')
+async def stop_instance(ctx, message):
+    """Stop the instance based on ID"""
+    instance_id = message
+    await ctx.send(f"Stopping instance: {instance_id}")
+    await ctx.send(botinstance.stop_instance(instance_id))
+
 # Command: List Instance
 @bot.command(category='Instance Control')
 async def list_instances(ctx):
