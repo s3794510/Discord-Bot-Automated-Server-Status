@@ -43,10 +43,10 @@ async def on_command_error(ctx, error):
       await ctx.send("Commands can only be used in the 'bot' channel.")
       return
     if isinstance(error, commands.MissingRequiredArgument):
-      await ctx.send("Missing required argument. Please make a more complete command.")
+      await ctx.send("Missing required argument. Please complete your command.")
       return
     
-    
+
 
 #############################################################
 # Bot Beheviours
